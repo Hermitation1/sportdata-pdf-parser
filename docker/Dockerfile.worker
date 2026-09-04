@@ -1,0 +1,7 @@
+FROM pythonproject2-base:latest
+
+COPY . .
+
+ENV RAPIDOCR_DEVICE=cuda
+
+CMD ["uv", "run", "celery", "-A", "app.celery_app", "worker", "--loglevel=info"]

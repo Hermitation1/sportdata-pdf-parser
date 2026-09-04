@@ -1,0 +1,40 @@
+services:
+  redis:
+    image: redis:7-alpine
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - RAPIDOCR_DEVICE=cuda
+      - MOCK_PARSE=${MOCK_PARSE:-0}
+    volumes:
+      - ./files:/app/files
+      - ./hf_cache:/root/.cache/huggingface
+      - ./paddleocr_models:/app/paddleocr_models
+    depends_on:
+      - redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      - CALLBACK_ALLOWED_HOSTS=${CALLBACK_ALLOWED_HOSTS:-localhost}
+    volumes:
+      - ./files:/app/files
+    depends_on:
+      - redis
