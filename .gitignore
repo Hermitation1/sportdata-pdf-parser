@@ -1,0 +1,29 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.venv312/
+
+# Models & caches (large, downloaded at runtime)
+hf_cache/
+paddleocr_models/
+
+# Runtime files & results
+files/
+result*.json
+report.pdf
+report1.pdf
+report2.pdf
+TEST_RESULTS.md
+
+# IDE & tools
+.idea/
+.qwen/
+
+# source-kb artifacts (regenerable via kb-init)
+.source-cache/
+knowledge/
+kb-project.yaml
