@@ -83,7 +83,7 @@ set "API_URL=http://localhost:8001" && uv run pytest -m integration
 docker compose -p pdfparser-test down
 ```
 
-## Встраивание в чужой compose
+## Встраивание в ваш compose
 
 Сервисы переносятся как есть — `api`, `celery-worker`, `redis`. Заказчику нужны:
 
@@ -91,6 +91,6 @@ docker compose -p pdfparser-test down
 - env: `DEEPSEEK_API_KEY`, `CALLBACK_ALLOWED_HOSTS` (имя фронта заказчика), `REDIS_URL` (при своём Redis), `RAPIDOCR_DEVICE=cuda` (GPU-OCR)
 - GPU-доступ для `celery-worker` (`deploy.resources.reservations.devices` с `driver: nvidia`)
 
-## Как это работает (кратко)
+## Как это работает
 
 `POST /upload/` → файл в `files/{task_id}.pdf` → задача `app.tasks.parse_pdf` в Redis → воркер: OCR (docling/RapidOCR на GPU) → markdown → LLM-экстракция (DeepSeek, header + батчи по протоколам) → JSON призёров → result backend (+ опциональный `callback_url`).
