@@ -1,0 +1,45 @@
+[project]
+name = "pythonproject2"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi>=0.139.0",
+    "uvicorn>=0.51.0",
+    "python-multipart>=0.0.32",
+    "celery>=5.6.3",
+    "redis>=8.0.1",
+    "pydantic>=2.13.4",
+    "httpx>=0.28.1",
+]
+
+[dependency-groups]
+worker = [
+    "docling>=2.107.0,<2.108",
+    "docling-core>=2.84.0,<2.85",
+    "rapidocr>=3.9.0,<3.10",
+    "openai>=2.0.0,<3.0.0",
+    "onnxruntime-gpu>=1.20.1,<1.21",
+    "torch==2.12.1",
+    "torchvision==0.27.1",
+]
+
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = ["integration: requires running stack with MOCK_PARSE=1"]
+addopts = "-m 'not integration'"
+norecursedirs = ["hf_cache", ".venv", "files", "paddleocr_models", "knowledge", ".source-cache", "docker", "__pycache__", ".idea", ".qwen"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
